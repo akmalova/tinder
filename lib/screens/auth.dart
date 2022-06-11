@@ -4,6 +4,7 @@ import 'package:tinder/cubit/auth_cubit.dart';
 import 'package:tinder/screens/cards.dart';
 
 class Auth extends StatelessWidget {
+
   const Auth({super.key});
 
   @override
@@ -16,7 +17,7 @@ class Auth extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const SizedBox(
-                height: 60,
+                height: 20,
               ),
               TextField(
                 decoration: InputDecoration(
@@ -68,6 +69,8 @@ class Auth extends StatelessWidget {
                     'Неправильный логин или пароль',
                     style: TextStyle(fontSize: 17, color: Colors.red[600]),
                   );
+                } else if (state is AuthInProgress) {
+                  return CircularProgressIndicator(color: Colors.deepPurple[400]);
                 } else {
                   return const Text('');
                 }

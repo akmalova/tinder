@@ -10,10 +10,16 @@ class AuthCubit extends Cubit<AuthState> {
 
   void login() {
     if (counter == 0) {
-      emit(AuthError());
+      emit(AuthInProgress());
+      Future.delayed(const Duration(seconds: 1), () {
+        emit(AuthError());
+      });
       counter++;
     } else {
-      emit(AuthSuccess());
+      emit(AuthInProgress());
+      Future.delayed(const Duration(seconds: 3), () {
+        emit(AuthSuccess());
+      });
     }
   }
 }

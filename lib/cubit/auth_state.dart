@@ -8,3 +8,5 @@ class AuthInitial extends AuthState {}
 class AuthError extends AuthState {}
 
 class AuthSuccess extends AuthState {}
+
+class AuthInProgress extends AuthState {}
