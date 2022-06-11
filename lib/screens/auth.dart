@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinder/cubit/auth_cubit.dart';
+import 'package:tinder/screens/cards.dart';
 
 class Auth extends StatelessWidget {
   const Auth({super.key});
@@ -56,7 +57,12 @@ class Auth extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
+              BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
+                if (state is AuthSuccess) {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (BuildContext context) => const Cards()));
+                }
+              }, builder: (context, state) {
                 if (state is AuthError) {
                   return Text(
                     'Неправильный логин или пароль',
