@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinder/cubit/auth_cubit.dart';
 import 'package:tinder/screens/cards.dart';
+import 'package:tinder/screens/registration.dart';
 
 class Auth extends StatelessWidget {
-
   const Auth({super.key});
 
   @override
@@ -60,8 +60,16 @@ class Auth extends StatelessWidget {
               ),
               BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
                 if (state is AuthSuccess) {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (BuildContext context) => const Cards()));
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => const Cards()),
+                  );
+                } else if (state is AuthRegistration) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            const Registration()),
+                  );
                 }
               }, builder: (context, state) {
                 if (state is AuthError) {
@@ -70,7 +78,8 @@ class Auth extends StatelessWidget {
                     style: TextStyle(fontSize: 17, color: Colors.red[600]),
                   );
                 } else if (state is AuthInProgress) {
-                  return CircularProgressIndicator(color: Colors.deepPurple[400]);
+                  return CircularProgressIndicator(
+                      color: Colors.deepPurple[400]);
                 } else {
                   return const Text('');
                 }
@@ -97,7 +106,9 @@ class Auth extends StatelessWidget {
                 height: 10,
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.read<AuthCubit>().registration();
+                },
                 child: Text(
                   'Нет аккаунта',
                   style: TextStyle(color: Colors.grey[500], fontSize: 18),

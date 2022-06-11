@@ -22,4 +22,8 @@ class AuthCubit extends Cubit<AuthState> {
       });
     }
   }
+
+  void registration() {
+    emit(AuthRegistration());
+  }
 }
