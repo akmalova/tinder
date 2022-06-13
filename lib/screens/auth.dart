@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinder/cubit/auth_cubit.dart';
 
+
 class Auth extends StatelessWidget {
   const Auth({super.key});
 
@@ -15,7 +16,7 @@ class Auth extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const SizedBox(
-                height: 20,
+                height: 18,
               ),
               TextField(
                 decoration: InputDecoration(
