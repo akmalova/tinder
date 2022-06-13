@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinder/cubit/auth_cubit.dart';
-import 'package:tinder/screens/cards.dart';
-import 'package:tinder/screens/registration.dart';
 
 class Auth extends StatelessWidget {
   const Auth({super.key});
@@ -60,16 +58,9 @@ class Auth extends StatelessWidget {
               ),
               BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
                 if (state is AuthSuccess) {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => const Cards()),
-                  );
+                  Navigator.of(context).pushReplacementNamed('/cards');
                 } else if (state is AuthRegistration) {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            const Registration()),
-                  );
+                  Navigator.of(context).pushNamed('/registration');
                 }
               }, builder: (context, state) {
                 if (state is AuthError) {
