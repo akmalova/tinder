@@ -6,7 +6,6 @@ class Registration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(),
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       floatingActionButton: TextButton(
         onPressed: () {

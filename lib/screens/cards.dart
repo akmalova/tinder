@@ -63,12 +63,7 @@ class _CardsState extends State<Cards> {
                   );
                 },
                 onStackFinished: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Finish'),
-                      duration: Duration(milliseconds: 500),
-                    ),
-                  );
+                  Navigator.of(context).pushReplacementNamed('/finish');
                 },
               ),
             ],
