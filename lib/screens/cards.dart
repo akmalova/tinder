@@ -10,9 +10,11 @@ class Cards extends StatefulWidget {
 
 class _CardsState extends State<Cards> {
   final List<String> _images = <String>[
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDERoQEiwXP0bcJLikDMumDRyydcFEflbSgQ&usqp=CAU',
-    'https://twizz.ru/wp-content/uploads/2021/05/1622099283_fc897e1828f9dcc856c588b9e37a36ae.jpg',
-    'https://news.store.rambler.ru/img/65ab987af147013e1fb613b7e852778a?img-1-resize=width%3A1280%2Cheight%3A1280%2Cfit%3Acover&img-format=auto'
+    'images/1.jpg',
+    'images/2.jpg',
+    'images/3.jpg',
+    'images/4.jpg',
+    'images/5.jpg',
   ];
   final List<SwipeItem> _swipeItems = <SwipeItem>[];
   late MatchEngine _matchEngine;
@@ -73,7 +75,7 @@ class _CardsState extends State<Cards> {
     );
   }
 
-  Widget buildCard(String url) {
+  Widget buildCard(String image) {
     return Container(
       height: 450,
       decoration: BoxDecoration(
@@ -91,7 +93,7 @@ class _CardsState extends State<Cards> {
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(25)),
               image: DecorationImage(
-                image: Image.network(url).image,
+                image: Image.asset(image).image,
                 fit: BoxFit.cover,
               ),
             ),
