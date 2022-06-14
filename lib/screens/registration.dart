@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// По ТЗ нужно сделать заглушку
 class Registration extends StatelessWidget {
   const Registration({Key? key}) : super(key: key);
 
