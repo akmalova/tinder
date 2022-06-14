@@ -11,7 +11,7 @@ class Finish extends StatelessWidget {
           'Выйти',
           style: TextStyle(
             fontSize: 20,
-            color: Colors.deepPurple[400],
+            color: Colors.grey[500],
           ),
         ),
         onPressed: () {
