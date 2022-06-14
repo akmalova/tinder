@@ -17,7 +17,7 @@ class AuthCubit extends Cubit<AuthState> {
       counter++;
     } else {
       emit(AuthInProgress());
-      Future.delayed(const Duration(seconds: 3), () {
+      Future.delayed(const Duration(seconds: 2), () {
         emit(AuthSuccess());
       });
     }
