@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swipe_cards/swipe_cards.dart';
+import 'package:tinder/routes.dart';
 
 class Cards extends StatefulWidget {
   const Cards({Key? key}) : super(key: key);
@@ -17,7 +18,7 @@ class _CardsState extends State<Cards> {
     'images/5.jpg',
   ];
   final List<SwipeItem> _swipeItems = <SwipeItem>[];
-  late MatchEngine _matchEngine;
+  late final MatchEngine _matchEngine;
 
   @override
   void initState() {
@@ -26,20 +27,10 @@ class _CardsState extends State<Cards> {
         SwipeItem(
           content: buildCard(_images[i]),
           likeAction: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Liked'),
-                duration: Duration(milliseconds: 500),
-              ),
-            );
+            snackBar('Liked');
           },
           nopeAction: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Disliked'),
-                duration: Duration(milliseconds: 500),
-              ),
-            );
+            snackBar('Disliked');
           },
         ),
       );
@@ -65,7 +56,7 @@ class _CardsState extends State<Cards> {
                   );
                 },
                 onStackFinished: () {
-                  Navigator.of(context).pushReplacementNamed('/finish');
+                  Navigator.of(context).pushReplacementNamed(Routes.finish);
                 },
               ),
             ],
@@ -136,6 +127,16 @@ class _CardsState extends State<Cards> {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> snackBar(
+      String string) {
+    return ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(string),
+        duration: const Duration(milliseconds: 500),
       ),
     );
   }

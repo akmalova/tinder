@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tinder/routes.dart';
 
 class Finish extends StatelessWidget {
   const Finish({super.key});
@@ -15,7 +16,7 @@ class Finish extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          Navigator.of(context).pushReplacementNamed('/auth');
+          Navigator.of(context).pushReplacementNamed(Routes.auth);
         },
       ),
       body: Center(
@@ -31,7 +32,7 @@ class Finish extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pushReplacementNamed('/cards');
+                Navigator.of(context).pushReplacementNamed(Routes.cards);
               },
               style: ElevatedButton.styleFrom(
                 textStyle: const TextStyle(fontSize: 18),
