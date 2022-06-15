@@ -8,18 +8,16 @@ class AuthCubit extends Cubit<AuthState> {
 
   AuthCubit() : super(AuthInitial());
 
-  void login() {
+  void login() async {
     if (counter == 0) {
       emit(AuthInProgress());
-      Future.delayed(const Duration(seconds: 1), () {
-        emit(AuthError());
-      });
+      await Future.delayed(const Duration(seconds: 1));
+      emit(AuthError());
       counter++;
     } else {
       emit(AuthInProgress());
-      Future.delayed(const Duration(seconds: 3), () {
-        emit(AuthSuccess());
-      });
+      await Future.delayed(const Duration(seconds: 2));
+      emit(AuthSuccess());
     }
   }
 

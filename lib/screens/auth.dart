@@ -15,7 +15,7 @@ class Auth extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const SizedBox(
-                height: 19,
+                height: 18,
               ),
               TextField(
                 decoration: InputDecoration(
