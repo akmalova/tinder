@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tinder/cubit/auth_cubit.dart';
 import 'package:tinder/routes.dart';
 
 class Finish extends StatelessWidget {
@@ -17,6 +19,7 @@ class Finish extends StatelessWidget {
         ),
         onPressed: () {
           Navigator.of(context).pushReplacementNamed(Routes.auth);
+          context.read<AuthCubit>().logOut();
         },
       ),
       body: Center(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swipe_cards/swipe_cards.dart';
+import 'package:tinder/cubit/auth_cubit.dart';
 import 'package:tinder/routes.dart';
 
 class Cards extends StatefulWidget {
@@ -42,6 +44,19 @@ class _CardsState extends State<Cards> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: TextButton(
+        child: Text(
+          'Выйти',
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.grey[500],
+          ),
+        ),
+        onPressed: () {
+          Navigator.of(context).pushReplacementNamed(Routes.auth);
+          context.read<AuthCubit>().logOut();
+        },
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(30),

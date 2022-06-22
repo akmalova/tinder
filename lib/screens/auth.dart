@@ -2,8 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinder/cubit/auth_cubit.dart';
 
-class Auth extends StatelessWidget {
+class Auth extends StatefulWidget {
   const Auth({super.key});
+
+  @override
+  State<Auth> createState() => _AuthState();
+}
+
+class _AuthState extends State<Auth> {
+  late String _login;
+  late String _password;
+
+  final TextEditingController loginController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  void _onLoginPressed() {
+    _login = loginController.text.trim();
+    _password = passwordController.text.trim();
+    if (_login.isEmpty || _password.isEmpty) {
+      context.read<AuthCubit>().emptyFields();
+    } else {
+      context.read<AuthCubit>().logIn(_login, _password);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +39,10 @@ class Auth extends StatelessWidget {
                 height: 18,
               ),
               TextField(
+                controller: loginController,
                 decoration: InputDecoration(
                   labelText: 'Логин',
-                  labelStyle: const TextStyle(color: Colors.grey, fontSize: 18),
+                  labelStyle: const TextStyle(color: Colors.grey, fontSize: 17),
                   floatingLabelStyle:
                       const TextStyle(color: Colors.grey, fontSize: 20),
                   filled: true,
@@ -37,10 +59,11 @@ class Auth extends StatelessWidget {
                 height: 20,
               ),
               TextField(
+                controller: passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Пароль',
-                  labelStyle: const TextStyle(color: Colors.grey, fontSize: 18),
+                  labelStyle: const TextStyle(color: Colors.grey, fontSize: 17),
                   floatingLabelStyle:
                       const TextStyle(color: Colors.grey, fontSize: 20),
                   filled: true,
@@ -68,6 +91,11 @@ class Auth extends StatelessWidget {
                     'Неправильный логин или пароль',
                     style: TextStyle(fontSize: 17, color: Colors.red[600]),
                   );
+                } else if (state is AuthEmptyFields) {
+                  return Text(
+                    'Поля должны быть заполнены',
+                    style: TextStyle(fontSize: 17, color: Colors.red[600]),
+                  );
                 } else if (state is AuthInProgress) {
                   return CircularProgressIndicator(
                       color: Colors.deepPurple[400]);
@@ -79,9 +107,7 @@ class Auth extends StatelessWidget {
                 height: 20,
               ),
               ElevatedButton(
-                onPressed: () {
-                  context.read<AuthCubit>().login();
-                },
+                onPressed: _onLoginPressed,
                 style: ElevatedButton.styleFrom(
                   textStyle: const TextStyle(fontSize: 20),
                   primary: Colors.deepPurple[400],
@@ -98,7 +124,7 @@ class Auth extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  context.read<AuthCubit>().registration();
+                  context.read<AuthCubit>().noAccount();
                 },
                 child: Text(
                   'Нет аккаунта',
