@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinder/cubit/auth_cubit.dart';
+import 'package:tinder/cubit/cards_cubit.dart';
 import 'package:tinder/router.dart';
 import 'package:tinder/routes.dart';
 import 'package:tinder/services/storage.dart';
@@ -18,8 +19,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => AuthCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthCubit>(
+          create: (BuildContext context) => AuthCubit(),
+        ),
+        BlocProvider<CardsCubit>(
+          create: (BuildContext context) => CardsCubit(),
+        ),
+      ],
       child: const MaterialApp(
         title: 'Tinder',
         onGenerateRoute: MyRouter.generateRoute,

@@ -27,11 +27,11 @@ class _AuthState extends State<Auth> {
     }
   }
 
-  Future<void> auth() async {
+  void auth() {
     String? login = Storage.getEmail();
     String? password = Storage.getPassword();
     if (login != null && password != null) {
-      await context.read<AuthCubit>().logIn(login, password);
+      context.read<AuthCubit>().logIn(login, password);
     }
   }
 
