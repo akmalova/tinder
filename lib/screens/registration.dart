@@ -26,7 +26,7 @@ class _RegistrationState extends State<Registration> {
     if (_name.isEmpty || _login.isEmpty || _password.isEmpty) {
       context.read<AuthCubit>().emptyFields();
     } else {
-      context.read<AuthCubit>().register(_login, _password);
+      context.read<AuthCubit>().register(_name, _login, _password);
     }
   }
 
@@ -113,6 +113,11 @@ class _RegistrationState extends State<Registration> {
                 if (state is AuthEmptyFields) {
                   return Text(
                     'Поля должны быть заполнены',
+                    style: TextStyle(fontSize: 17, color: Colors.red[600]),
+                  );
+                } else if (state is AuthError) {
+                  return Text(
+                    'Ошибка регистрации',
                     style: TextStyle(fontSize: 17, color: Colors.red[600]),
                   );
                 } else if (state is AuthInProgress) {

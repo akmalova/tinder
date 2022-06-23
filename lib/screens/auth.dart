@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinder/cubit/auth_cubit.dart';
+import 'package:tinder/services/storage.dart';
 
 class Auth extends StatefulWidget {
   const Auth({super.key});
@@ -26,8 +27,17 @@ class _AuthState extends State<Auth> {
     }
   }
 
+  Future<void> auth() async {
+    String? login = Storage.getEmail();
+    String? password = Storage.getPassword();
+    if (login != null && password != null) {
+      await context.read<AuthCubit>().logIn(login, password);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    auth();
     return Scaffold(
       body: Center(
         child: Padding(
@@ -88,7 +98,7 @@ class _AuthState extends State<Auth> {
               }, builder: (context, state) {
                 if (state is AuthError) {
                   return Text(
-                    'Неправильный логин или пароль',
+                    'Ошибка авторизации',
                     style: TextStyle(fontSize: 17, color: Colors.red[600]),
                   );
                 } else if (state is AuthEmptyFields) {

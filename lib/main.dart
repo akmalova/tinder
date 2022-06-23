@@ -4,10 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinder/cubit/auth_cubit.dart';
 import 'package:tinder/router.dart';
 import 'package:tinder/routes.dart';
+import 'package:tinder/services/storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await Storage.init();
   runApp(const MyApp());
 }
 
