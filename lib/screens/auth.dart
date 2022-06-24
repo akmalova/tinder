@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinder/cubit/auth_cubit.dart';
+import 'package:tinder/cubit/cards_cubit.dart';
+import 'package:tinder/routes.dart';
 import 'package:tinder/services/storage.dart';
 
 class Auth extends StatefulWidget {
@@ -17,37 +19,53 @@ class _AuthState extends State<Auth> {
   final TextEditingController loginController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  void _onLoginPressed() {
+  void _onLoginPressed() async {
     _login = loginController.text.trim();
     _password = passwordController.text.trim();
     if (_login.isEmpty || _password.isEmpty) {
       context.read<AuthCubit>().emptyFields();
     } else {
-      context.read<AuthCubit>().logIn(_login, _password);
+      Map<String, String>? data =
+          await context.read<AuthCubit>().logIn(_login, _password);
+      if (data != null) {
+        context.read<CardsCubit>().initUser(
+            id: data['id']!,
+            login: data['email']!,
+            password: data['password']!); // ???
+      }
     }
   }
 
-  void auth() {
+  void auth() async {
     String? login = Storage.getEmail();
     String? password = Storage.getPassword();
     if (login != null && password != null) {
-      context.read<AuthCubit>().logIn(login, password);
+      Map<String, String>? data =
+          await context.read<AuthCubit>().logIn(login, password);
+      if (data != null) {
+        context.read<CardsCubit>().initUser(
+            id: data['id']!,
+            login: data['email']!,
+            password: data['password']!);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    auth();
+    //auth();
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Авторизация'),
+        backgroundColor: Colors.deepPurple[400],
+        centerTitle: true,
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const SizedBox(
-                height: 18,
-              ),
               TextField(
                 controller: loginController,
                 decoration: InputDecoration(
@@ -91,14 +109,14 @@ class _AuthState extends State<Auth> {
               ),
               BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
                 if (state is AuthSuccess) {
-                  Navigator.of(context).pushReplacementNamed('/cards');
+                  Navigator.of(context).pushReplacementNamed(Routes.cards);
                 } else if (state is AuthRegistration) {
-                  Navigator.of(context).pushNamed('/registration');
+                  Navigator.of(context).pushNamed(Routes.registration);
                 }
               }, builder: (context, state) {
                 if (state is AuthError) {
                   return Text(
-                    'Ошибка авторизации',
+                    'Неправильный логин или пароль',
                     style: TextStyle(fontSize: 17, color: Colors.red[600]),
                   );
                 } else if (state is AuthEmptyFields) {

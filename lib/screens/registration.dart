@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinder/cubit/cards_cubit.dart';
-import 'package:tinder/models/app_user.dart';
+import 'package:tinder/routes.dart';
 
 import '../cubit/auth_cubit.dart';
 
@@ -28,11 +28,15 @@ class _RegistrationState extends State<Registration> {
     if (_name.isEmpty || _login.isEmpty || _password.isEmpty) {
       context.read<AuthCubit>().emptyFields();
     } else {
-      AppUser? user =
+      Map<String, String>? data =
           await context.read<AuthCubit>().register(_name, _login, _password);
-      if (user != null) {
-        context.read<CardsCubit>().initUser(user);
-        await context.read<CardsCubit>().setData();
+      if (data != null) {
+        context.read<CardsCubit>().initUser(
+            id: data['id']!,
+            name: data['name']!,
+            login: data['email']!,
+            password: data['password']!);
+        context.read<CardsCubit>().setData();
       }
     }
   }
@@ -74,7 +78,7 @@ class _RegistrationState extends State<Registration> {
               TextField(
                 controller: loginController,
                 decoration: InputDecoration(
-                  labelText: 'Адрес электронной почты',
+                  labelText: 'Логин',
                   labelStyle: const TextStyle(color: Colors.grey, fontSize: 17),
                   floatingLabelStyle:
                       const TextStyle(color: Colors.grey, fontSize: 20),
@@ -114,7 +118,7 @@ class _RegistrationState extends State<Registration> {
               ),
               BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
                 if (state is AuthSuccess) {
-                  Navigator.of(context).pushReplacementNamed('/cards');
+                  Navigator.of(context).pushReplacementNamed(Routes.cards);
                 }
               }, builder: (context, state) {
                 if (state is AuthEmptyFields) {
