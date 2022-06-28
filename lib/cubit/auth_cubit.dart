@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tinder/services/storage.dart';
+import 'package:tinder/services/users_file.dart';
 
 part 'auth_state.dart';
 
@@ -10,16 +11,16 @@ class AuthCubit extends Cubit<AuthState> {
 
   AuthCubit() : super(AuthInitial());
 
-  Future<Map<String, String>?> logIn(String email, String password) async {
+  Future<Map<String, String>?> logIn(String login, String password) async {
     try {
       emit(AuthInProgress());
       UserCredential result = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
+          email: login, password: password);
       User? user = result.user;
       if (user != null) {
-        await Storage.setData(email, password);
+        await Storage.setData(login, password);
         emit(AuthSuccess());
-        return {'id': user.uid, 'email': email, 'password': password};
+        return {'id': user.uid, 'login': login, 'password': password};
       } else {
         emit(AuthError());
         return null;
@@ -39,18 +40,19 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<Map<String, String>?> register(
-      String name, String email, String password) async {
+      String name, String login, String password) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+          email: login, password: password);
       User? user = result.user;
       if (user != null) {
-        await Storage.setData(email, password);
+        await Storage.setData(login, password);
         emit(AuthSuccess());
+        await UsersFile.addUser(user.uid);
         return {
           'id': user.uid,
           'name': name,
-          'email': email,
+          'email': login,
           'password': password
         };
       } else {

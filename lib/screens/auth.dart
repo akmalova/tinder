@@ -19,7 +19,7 @@ class _AuthState extends State<Auth> {
   final TextEditingController loginController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  void _onLoginPressed() async {
+  Future<void> _onLoginPressed() async {
     _login = loginController.text.trim();
     _password = passwordController.text.trim();
     if (_login.isEmpty || _password.isEmpty) {
@@ -28,27 +28,26 @@ class _AuthState extends State<Auth> {
       Map<String, String>? data =
           await context.read<AuthCubit>().logIn(_login, _password);
       if (data != null) {
-        context.read<CardsCubit>().initUser(
-            id: data['id']!,
-            login: data['email']!,
-            password: data['password']!); // ???
+        initUser(data);
       }
     }
   }
 
-  void auth() async {
+  Future<void> auth() async {
     String? login = Storage.getEmail();
     String? password = Storage.getPassword();
     if (login != null && password != null) {
       Map<String, String>? data =
           await context.read<AuthCubit>().logIn(login, password);
       if (data != null) {
-        context.read<CardsCubit>().initUser(
-            id: data['id']!,
-            login: data['email']!,
-            password: data['password']!);
+        initUser(data);
       }
     }
+  }
+
+  Future<void> initUser(Map<String, String> data) async {
+    await context.read<CardsCubit>().initUser(
+        id: data['id']!, login: data['login']!, password: data['password']!);
   }
 
   @override
@@ -109,7 +108,7 @@ class _AuthState extends State<Auth> {
               ),
               BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
                 if (state is AuthSuccess) {
-                  Navigator.of(context).pushReplacementNamed(Routes.cards);
+                  Navigator.of(context).pushReplacementNamed(Routes.app);
                 } else if (state is AuthRegistration) {
                   Navigator.of(context).pushNamed(Routes.registration);
                 }

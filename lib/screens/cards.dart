@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 import 'package:tinder/cubit/auth_cubit.dart';
+import 'package:tinder/cubit/cards_cubit.dart';
 import 'package:tinder/routes.dart';
+import 'package:tuple/tuple.dart';
 
 class Cards extends StatefulWidget {
   const Cards({Key? key}) : super(key: key);
@@ -12,26 +14,28 @@ class Cards extends StatefulWidget {
 }
 
 class _CardsState extends State<Cards> {
-  final List<String> _images = <String>[
-    'images/1.jpg',
-    'images/2.jpg',
-    'images/3.jpg',
-    'images/4.jpg',
-    'images/5.jpg',
-  ];
+  final List<Tuple2<String, String>> _data = [];
   final List<SwipeItem> _swipeItems = <SwipeItem>[];
   late final MatchEngine _matchEngine;
 
+  void initData() {
+    _data.addAll(context.read<CardsCubit>().data);
+  }
+
   @override
   void initState() {
-    for (int i = 0; i < _images.length; i++) {
+    initData();
+    print('DATA $_data');
+    for (int i = 0; i < _data.length; i++) {
       _swipeItems.add(
         SwipeItem(
-          content: buildCard(_images[i]),
+          content: buildCard(_data[i].item2),
           likeAction: () {
+            context.read<CardsCubit>().addLike(_data[i].item1);
             snackBar('Liked');
           },
           nopeAction: () {
+            context.read<CardsCubit>().addDislike(_data[i].item1);
             snackBar('Disliked');
           },
         ),
@@ -53,8 +57,9 @@ class _CardsState extends State<Cards> {
           ),
         ),
         onPressed: () {
-          Navigator.of(context).pushReplacementNamed(Routes.auth);
+          context.read<CardsCubit>().clear();
           context.read<AuthCubit>().logOut();
+          Navigator.of(context).pushReplacementNamed(Routes.auth);
         },
       ),
       body: Center(

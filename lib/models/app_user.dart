@@ -3,8 +3,8 @@ class AppUser {
   final String name;
   String login;
   String password;
-  final List<int> likes;
-  final List<int> dislikes;
+  final List<String> likes;
+  final List<String> dislikes;
 
   AppUser(
       {required this.id,

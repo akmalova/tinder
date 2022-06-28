@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tinder/cubit/auth_cubit.dart';
 import 'package:tinder/cubit/cards_cubit.dart';
 import 'package:tinder/routes.dart';
-
-import '../cubit/auth_cubit.dart';
 
 class Registration extends StatefulWidget {
   const Registration({Key? key}) : super(key: key);
@@ -21,7 +20,7 @@ class _RegistrationState extends State<Registration> {
   final TextEditingController loginController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  void _onRegisterPressed() async {
+  Future<void> _onRegisterPressed() async {
     _name = nameController.text.trim();
     _login = loginController.text.trim();
     _password = passwordController.text.trim();
@@ -31,14 +30,17 @@ class _RegistrationState extends State<Registration> {
       Map<String, String>? data =
           await context.read<AuthCubit>().register(_name, _login, _password);
       if (data != null) {
-        context.read<CardsCubit>().initUser(
-            id: data['id']!,
-            name: data['name']!,
-            login: data['email']!,
-            password: data['password']!);
-        context.read<CardsCubit>().setData();
+        initUser(data);
       }
     }
+  }
+
+  Future<void> initUser(Map<String, String> data) async {
+    await context.read<CardsCubit>().initUser(
+        id: data['id']!,
+        name: data['name']!,
+        login: data['email']!,
+        password: data['password']!);
   }
 
   @override
@@ -118,7 +120,7 @@ class _RegistrationState extends State<Registration> {
               ),
               BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
                 if (state is AuthSuccess) {
-                  Navigator.of(context).pushReplacementNamed(Routes.cards);
+                  Navigator.of(context).pushReplacementNamed(Routes.app);
                 }
               }, builder: (context, state) {
                 if (state is AuthEmptyFields) {
