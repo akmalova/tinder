@@ -25,7 +25,7 @@ class _CardsState extends State<Cards> {
   @override
   void initState() {
     initData();
-    print('DATA $_data');
+    //print('DATA $_data');
     for (int i = 0; i < _data.length; i++) {
       _swipeItems.add(
         SwipeItem(

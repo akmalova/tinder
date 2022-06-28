@@ -52,111 +52,116 @@ class _RegistrationState extends State<Registration> {
         centerTitle: true,
       ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(30),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              TextField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  labelText: 'Имя',
-                  labelStyle: const TextStyle(color: Colors.grey, fontSize: 17),
-                  floatingLabelStyle:
-                      const TextStyle(color: Colors.grey, fontSize: 20),
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50),
-                    borderSide: const BorderSide(
-                      width: 0,
-                      style: BorderStyle.none,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(30),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    labelText: 'Имя',
+                    labelStyle:
+                        const TextStyle(color: Colors.grey, fontSize: 17),
+                    floatingLabelStyle:
+                        const TextStyle(color: Colors.grey, fontSize: 20),
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      borderSide: const BorderSide(
+                        width: 0,
+                        style: BorderStyle.none,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextField(
-                controller: loginController,
-                decoration: InputDecoration(
-                  labelText: 'Логин',
-                  labelStyle: const TextStyle(color: Colors.grey, fontSize: 17),
-                  floatingLabelStyle:
-                      const TextStyle(color: Colors.grey, fontSize: 20),
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50),
-                    borderSide: const BorderSide(
-                      width: 0,
-                      style: BorderStyle.none,
+                const SizedBox(
+                  height: 20,
+                ),
+                TextField(
+                  controller: loginController,
+                  decoration: InputDecoration(
+                    labelText: 'Логин',
+                    labelStyle:
+                        const TextStyle(color: Colors.grey, fontSize: 17),
+                    floatingLabelStyle:
+                        const TextStyle(color: Colors.grey, fontSize: 20),
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      borderSide: const BorderSide(
+                        width: 0,
+                        style: BorderStyle.none,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Пароль',
-                  labelStyle: const TextStyle(color: Colors.grey, fontSize: 17),
-                  floatingLabelStyle:
-                      const TextStyle(color: Colors.grey, fontSize: 20),
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50),
-                    borderSide: const BorderSide(
-                      width: 0,
-                      style: BorderStyle.none,
+                const SizedBox(
+                  height: 20,
+                ),
+                TextField(
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Пароль',
+                    labelStyle:
+                        const TextStyle(color: Colors.grey, fontSize: 17),
+                    floatingLabelStyle:
+                        const TextStyle(color: Colors.grey, fontSize: 20),
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      borderSide: const BorderSide(
+                        width: 0,
+                        style: BorderStyle.none,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
-                if (state is AuthSuccess) {
-                  Navigator.of(context).pushReplacementNamed(Routes.app);
-                }
-              }, builder: (context, state) {
-                if (state is AuthEmptyFields) {
-                  return Text(
-                    'Поля должны быть заполнены',
-                    style: TextStyle(fontSize: 17, color: Colors.red[600]),
-                  );
-                } else if (state is AuthError) {
-                  return Text(
-                    'Ошибка регистрации',
-                    style: TextStyle(fontSize: 17, color: Colors.red[600]),
-                  );
-                } else if (state is AuthInProgress) {
-                  return CircularProgressIndicator(
-                      color: Colors.deepPurple[400]);
-                } else {
-                  return const Text('');
-                }
-              }),
-              const SizedBox(
-                height: 20,
-              ),
-              ElevatedButton(
-                onPressed: _onRegisterPressed,
-                style: ElevatedButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: 20),
-                  primary: Colors.deepPurple[400],
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
-                  ),
+                const SizedBox(
+                  height: 20,
                 ),
-                child: const Text('Ок'),
-              ),
-            ],
+                BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
+                  if (state is AuthSuccess) {
+                    Navigator.of(context).pushReplacementNamed(Routes.app);
+                  }
+                }, builder: (context, state) {
+                  if (state is AuthEmptyFields) {
+                    return Text(
+                      'Поля должны быть заполнены',
+                      style: TextStyle(fontSize: 17, color: Colors.red[600]),
+                    );
+                  } else if (state is AuthError) {
+                    return Text(
+                      'Ошибка регистрации',
+                      style: TextStyle(fontSize: 17, color: Colors.red[600]),
+                    );
+                  } else if (state is AuthInProgress) {
+                    return CircularProgressIndicator(
+                        color: Colors.deepPurple[400]);
+                  } else {
+                    return const Text('');
+                  }
+                }),
+                const SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                  onPressed: _onRegisterPressed,
+                  style: ElevatedButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 20),
+                    primary: Colors.deepPurple[400],
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                  child: const Text('Ок'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

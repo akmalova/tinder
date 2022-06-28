@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinder/cubit/cards_cubit.dart';
 import 'package:tinder/routes.dart';
-import 'package:tinder/screens/cards.dart';
 import 'package:tuple/tuple.dart';
 
 class App extends StatefulWidget {
@@ -33,7 +32,7 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    _timer = Timer(const Duration(seconds: 1), initData);
+    _timer = Timer(const Duration(seconds: 2), initData);
     return Scaffold(
       body: Center(
         child: CircularProgressIndicator(color: Colors.deepPurple[400]),
@@ -46,5 +45,4 @@ class _AppState extends State<App> {
     _timer.cancel();
     super.dispose();
   }
-  
 }
