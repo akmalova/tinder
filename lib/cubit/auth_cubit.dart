@@ -15,18 +15,15 @@ class AuthCubit extends Cubit<AuthState> {
     String? login = Storage.getEmail();
     String? password = Storage.getPassword();
     if (login != null && password != null) {
-      Map<String, String>? data =
-          await logIn(login, password);
+      Map<String, String>? data = await logIn(login, password);
       if (data != null) {
         emit(AuthSuccess());
-      }
-      else {
-        emit(AuthInitial());
+      } else {
+        emit(AuthPage());
       }
       return data;
-    }
-    else {
-      emit(AuthInitial());
+    } else {
+      emit(AuthPage());
       return null;
     }
   }
