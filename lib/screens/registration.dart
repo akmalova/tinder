@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinder/cubit/auth_cubit.dart';
-import 'package:tinder/cubit/cards_cubit.dart';
+import 'package:tinder/cubit/app_cubit.dart';
 import 'package:tinder/routes.dart';
 
 class Registration extends StatefulWidget {
@@ -36,7 +36,7 @@ class _RegistrationState extends State<Registration> {
   }
 
   Future<void> initUser(Map<String, String> data) async {
-    await context.read<CardsCubit>().initUser(
+    await context.read<AppCubit>().initUser(
         id: data['id']!,
         name: data['name']!,
         login: data['email']!,
@@ -82,7 +82,7 @@ class _RegistrationState extends State<Registration> {
                 TextField(
                   controller: loginController,
                   decoration: InputDecoration(
-                    labelText: 'Логин',
+                    labelText: 'Адрес электронной почты',
                     labelStyle:
                         const TextStyle(color: Colors.grey, fontSize: 17),
                     floatingLabelStyle:
@@ -104,7 +104,7 @@ class _RegistrationState extends State<Registration> {
                   controller: passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
-                    labelText: 'Пароль',
+                    labelText: 'Пароль (не менее 6 символов)',
                     labelStyle:
                         const TextStyle(color: Colors.grey, fontSize: 17),
                     floatingLabelStyle:

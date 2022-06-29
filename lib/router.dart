@@ -4,12 +4,15 @@ import 'package:tinder/screens/app.dart';
 import 'package:tinder/screens/auth.dart';
 import 'package:tinder/screens/cards.dart';
 import 'package:tinder/screens/finish.dart';
+import 'package:tinder/screens/initial.dart';
 import 'package:tinder/screens/registration.dart';
 
 class MyRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    //final arguments = settings.arguments;
     switch (settings.name) {
+      case Routes.initial:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const Initial());
       case Routes.auth:
         return MaterialPageRoute(
             builder: (BuildContext context) => const Auth());

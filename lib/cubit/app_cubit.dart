@@ -5,14 +5,14 @@ import 'package:tinder/models/app_user.dart';
 import 'package:tinder/services/users_file.dart';
 import 'package:tuple/tuple.dart';
 
-part 'cards_state.dart';
+part 'app_state.dart';
 
-class CardsCubit extends Cubit<CardsState> {
+class AppCubit extends Cubit<AppState> {
   late AppUser _user;
   final List<Tuple2<String, String>> _data = [];
   final DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
 
-  CardsCubit() : super(CardsInitial());
+  AppCubit() : super(AppInitial());
 
   Future<void> initUser(
       {required String id,
@@ -77,7 +77,7 @@ class CardsCubit extends Cubit<CardsState> {
     await setData();
   }
 
-  Future<List<Tuple2<String, String>>> initData() async {
+  Future<void> initData() async {
     Map<String, String> users = await UsersFile.getUsers();
     Iterable<String> usersId = users.keys;
     for (String id in usersId) {
@@ -87,7 +87,12 @@ class CardsCubit extends Cubit<CardsState> {
         _data.add(Tuple2(id, users[id]!));
       }
     }
-    return _data;
+    if (_data.isEmpty) {
+      emit(AppFinish());
+    }
+    else {
+      emit(AppCards());
+    }
   }
 
   List<Tuple2<String, String>> get data {

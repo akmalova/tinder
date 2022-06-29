@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 import 'package:tinder/cubit/auth_cubit.dart';
-import 'package:tinder/cubit/cards_cubit.dart';
+import 'package:tinder/cubit/app_cubit.dart';
 import 'package:tinder/routes.dart';
 import 'package:tuple/tuple.dart';
 
@@ -19,7 +19,7 @@ class _CardsState extends State<Cards> {
   late final MatchEngine _matchEngine;
 
   void initData() {
-    _data.addAll(context.read<CardsCubit>().data);
+    _data.addAll(context.read<AppCubit>().data);
   }
 
   @override
@@ -31,11 +31,11 @@ class _CardsState extends State<Cards> {
         SwipeItem(
           content: buildCard(_data[i].item2),
           likeAction: () {
-            context.read<CardsCubit>().addLike(_data[i].item1);
+            context.read<AppCubit>().addLike(_data[i].item1);
             snackBar('Liked');
           },
           nopeAction: () {
-            context.read<CardsCubit>().addDislike(_data[i].item1);
+            context.read<AppCubit>().addDislike(_data[i].item1);
             snackBar('Disliked');
           },
         ),
@@ -57,7 +57,7 @@ class _CardsState extends State<Cards> {
           ),
         ),
         onPressed: () {
-          context.read<CardsCubit>().clear();
+          context.read<AppCubit>().clear();
           context.read<AuthCubit>().logOut();
           Navigator.of(context).pushReplacementNamed(Routes.auth);
         },

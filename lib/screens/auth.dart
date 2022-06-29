@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinder/cubit/auth_cubit.dart';
-import 'package:tinder/cubit/cards_cubit.dart';
+import 'package:tinder/cubit/app_cubit.dart';
 import 'package:tinder/routes.dart';
 import 'package:tinder/services/storage.dart';
 
@@ -46,7 +46,7 @@ class _AuthState extends State<Auth> {
   }
 
   Future<void> initUser(Map<String, String> data) async {
-    await context.read<CardsCubit>().initUser(
+    await context.read<AppCubit>().initUser(
         id: data['id']!, login: data['login']!, password: data['password']!);
   }
 

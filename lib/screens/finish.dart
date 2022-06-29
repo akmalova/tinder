@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinder/cubit/auth_cubit.dart';
-import 'package:tinder/cubit/cards_cubit.dart';
+import 'package:tinder/cubit/app_cubit.dart';
 import 'package:tinder/routes.dart';
 
 class Finish extends StatelessWidget {
@@ -23,7 +23,7 @@ class Finish extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                context.read<CardsCubit>().clear();
+                context.read<AppCubit>().clear();
                 context.read<AuthCubit>().logOut();
                 Navigator.of(context).pushReplacementNamed(Routes.auth);
               },

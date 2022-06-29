@@ -11,6 +11,26 @@ class AuthCubit extends Cubit<AuthState> {
 
   AuthCubit() : super(AuthInitial());
 
+  Future<Map<String, String>?> automaticAuth() async {
+    String? login = Storage.getEmail();
+    String? password = Storage.getPassword();
+    if (login != null && password != null) {
+      Map<String, String>? data =
+          await logIn(login, password);
+      if (data != null) {
+        emit(AuthSuccess());
+      }
+      else {
+        emit(AuthInitial());
+      }
+      return data;
+    }
+    else {
+      emit(AuthInitial());
+      return null;
+    }
+  }
+
   Future<Map<String, String>?> logIn(String login, String password) async {
     try {
       emit(AuthInProgress());
