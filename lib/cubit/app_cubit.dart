@@ -1,16 +1,16 @@
 import 'package:bloc/bloc.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:tinder/models/app_user.dart';
+import 'package:tinder/services/firebase.dart';
 import 'package:tinder/services/users_file.dart';
 import 'package:tuple/tuple.dart';
 
 part 'app_state.dart';
 
 class AppCubit extends Cubit<AppState> {
+  Firebase firebase = Firebase();
   late AppUser _user;
   final List<Tuple2<String, String>> _data = [];
-  final DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
 
   AppCubit() : super(AppInitial());
 
@@ -20,7 +20,7 @@ class AppCubit extends Cubit<AppState> {
       required String login,
       required String password}) async {
     if (name == null) {
-      Map<String, dynamic> data = await getData(id);
+      Map<String, dynamic> data = await firebase.getData(id);
       String receivedName = data['name'];
       List<String> likes = [];
       if (data['likes'] != null) {
@@ -49,32 +49,18 @@ class AppCubit extends Cubit<AppState> {
           name: name,
           likes: [],
           dislikes: []);
-          setData();
+          firebase.setData(_user);
     }
-  }
-
-  Future<void> setData() async {
-    await databaseReference.child(_user.id).set(_user.toMap());
-  }
-
-  Future<Map<String, dynamic>> getData(String id) async {
-    DataSnapshot snapshot = await databaseReference.child(id).get();
-    Iterable<DataSnapshot> dataSnapshots = snapshot.children;
-    Map<String, dynamic> data = {};
-    for (int i = 0; i < dataSnapshots.length; i++) {
-      data[dataSnapshots.elementAt(i).key!] = dataSnapshots.elementAt(i).value;
-    }
-    return data;
   }
 
   Future<void> addLike(String id) async {
     _user.likes.add(id);
-    await setData();
+    await firebase.setData(_user);
   }
 
   Future<void> addDislike(String id) async {
     _user.dislikes.add(id);
-    await setData();
+    await firebase.setData(_user);
   }
 
   Future<void> initData() async {
