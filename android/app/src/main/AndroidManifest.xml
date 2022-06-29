@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.tinder">
    <application
-        android:label="tinder"
+        android:label="Tinder"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
