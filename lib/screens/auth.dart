@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinder/cubit/auth_cubit.dart';
 import 'package:tinder/cubit/app_cubit.dart';
 import 'package:tinder/routes.dart';
-import 'package:tinder/services/storage.dart';
 
 class Auth extends StatefulWidget {
   const Auth({super.key});
@@ -33,18 +32,6 @@ class _AuthState extends State<Auth> {
     }
   }
 
-  Future<void> auth() async {
-    String? login = Storage.getEmail();
-    String? password = Storage.getPassword();
-    if (login != null && password != null) {
-      Map<String, String>? data =
-          await context.read<AuthCubit>().logIn(login, password);
-      if (data != null) {
-        initUser(data);
-      }
-    }
-  }
-
   Future<void> initUser(Map<String, String> data) async {
     await context.read<AppCubit>().initUser(
         id: data['id']!, login: data['login']!, password: data['password']!);
@@ -52,7 +39,6 @@ class _AuthState extends State<Auth> {
 
   @override
   Widget build(BuildContext context) {
-    auth();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Авторизация'),

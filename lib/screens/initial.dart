@@ -34,10 +34,10 @@ class _InitialState extends State<Initial> {
     auth();
     return Scaffold(
       body: BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
-        if (state is AuthInitial) {
-          Navigator.of(context).pushReplacementNamed(Routes.auth);
-        } else if (state is AuthSuccess) {
+        if (state is AuthSuccess) {
           Navigator.of(context).pushReplacementNamed(Routes.app);
+        } else {
+          Navigator.of(context).pushReplacementNamed(Routes.auth);
         }
       }, builder: (context, state) {
         return Center(

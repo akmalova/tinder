@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
       child: const MaterialApp(
         title: 'Tinder',
         onGenerateRoute: MyRouter.generateRoute,
-        initialRoute: Routes.initial,
+        initialRoute: Routes.auth,
       ),
     );
   }
