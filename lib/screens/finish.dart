@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tinder/cubit/auth_cubit.dart';
+import 'package:tinder/cubit/app_cubit.dart';
 import 'package:tinder/routes.dart';
 
 class Finish extends StatelessWidget {
@@ -7,24 +10,12 @@ class Finish extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: TextButton(
-        child: Text(
-          'Выйти',
-          style: TextStyle(
-            fontSize: 20,
-            color: Colors.grey[500],
-          ),
-        ),
-        onPressed: () {
-          Navigator.of(context).pushReplacementNamed(Routes.auth);
-        },
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Вы достигли конца списка',
+              'Пока что больше никого нет...',
               style: TextStyle(fontSize: 20, color: Colors.grey[500]),
             ),
             const SizedBox(
@@ -32,7 +23,9 @@ class Finish extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pushReplacementNamed(Routes.cards);
+                context.read<AppCubit>().clear();
+                context.read<AuthCubit>().logOut();
+                Navigator.of(context).pushReplacementNamed(Routes.auth);
               },
               style: ElevatedButton.styleFrom(
                 textStyle: const TextStyle(fontSize: 18),
@@ -43,7 +36,7 @@ class Finish extends StatelessWidget {
                   borderRadius: BorderRadius.circular(50),
                 ),
               ),
-              child: const Text('Начать сначала'),
+              child: const Text('Выйти'),
             ),
             const SizedBox(
               height: 15,
