@@ -4,7 +4,8 @@ import 'package:tinder/screens/app.dart';
 import 'package:tinder/screens/auth.dart';
 import 'package:tinder/screens/cards.dart';
 import 'package:tinder/screens/finish.dart';
-import 'package:tinder/screens/initial.dart';
+import 'package:tinder/screens/auth_initial.dart';
+import 'package:tinder/screens/rating.dart';
 import 'package:tinder/screens/registration.dart';
 
 class MyRouter {
@@ -12,7 +13,7 @@ class MyRouter {
     switch (settings.name) {
       case Routes.initial:
         return MaterialPageRoute(
-            builder: (BuildContext context) => const Initial());
+            builder: (BuildContext context) => const AuthInitial());
       case Routes.auth:
         return MaterialPageRoute(
             builder: (BuildContext context) => const Auth());
@@ -28,6 +29,9 @@ class MyRouter {
       case Routes.app:
         return MaterialPageRoute(
             builder: (BuildContext context) => const App());
+      case Routes.rating:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const Rating());
       default:
         return MaterialPageRoute(
           builder: (BuildContext context) => const Scaffold(

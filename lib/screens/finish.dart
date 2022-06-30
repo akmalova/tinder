@@ -10,6 +10,20 @@ class Finish extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: TextButton(
+        child: Text(
+          'Выйти',
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.grey[500],
+          ),
+        ),
+        onPressed: () {
+          context.read<AppCubit>().clear();
+          context.read<AuthCubit>().logOut();
+          Navigator.of(context).pushReplacementNamed(Routes.auth);
+        },
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -23,9 +37,7 @@ class Finish extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                context.read<AppCubit>().clear();
-                context.read<AuthCubit>().logOut();
-                Navigator.of(context).pushReplacementNamed(Routes.auth);
+                Navigator.of(context).pushNamed(Routes.rating);
               },
               style: ElevatedButton.styleFrom(
                 textStyle: const TextStyle(fontSize: 18),
@@ -36,7 +48,7 @@ class Finish extends StatelessWidget {
                   borderRadius: BorderRadius.circular(50),
                 ),
               ),
-              child: const Text('Выйти'),
+              child: const Text('Посмотреть оценки'),
             ),
             const SizedBox(
               height: 15,

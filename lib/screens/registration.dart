@@ -24,9 +24,9 @@ class _RegistrationState extends State<Registration> {
     _name = nameController.text.trim();
     _login = loginController.text.trim();
     _password = passwordController.text.trim();
-    if (_name.isEmpty || _login.isEmpty || _password.isEmpty) {
-      context.read<AuthCubit>().emptyFields();
-    } else {
+    if (!context
+        .read<AuthCubit>()
+        .isEmptyFieldsRegister(_name, _login, _password)) {
       Map<String, String>? data =
           await context.read<AuthCubit>().register(_name, _login, _password);
       if (data != null) {
@@ -36,7 +36,7 @@ class _RegistrationState extends State<Registration> {
   }
 
   Future<void> initUser(Map<String, String> data) async {
-    await context.read<AppCubit>().initUser(
+    await context.read<AppCubit>().initUserRegister(
         id: data['id']!,
         name: data['name']!,
         login: data['email']!,

@@ -1,7 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:tinder/models/app_user.dart';
 
-class Firebase {
+class DatabaseService {
   final DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
 
   Future<void> setData(AppUser user) async {

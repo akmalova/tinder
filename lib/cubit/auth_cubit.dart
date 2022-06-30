@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinder/services/storage.dart';
 import 'package:tinder/services/users_file.dart';
 
@@ -8,12 +9,17 @@ part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  late final Storage _storage;
 
   AuthCubit() : super(AuthInitial());
 
+  Future<void> initStorage() async {
+    _storage = Storage(await SharedPreferences.getInstance());
+  }
+
   Future<Map<String, String>?> automaticAuth() async {
-    String? login = Storage.getEmail();
-    String? password = Storage.getPassword();
+    String? login = _storage.getEmail();
+    String? password = _storage.getPassword();
     if (login != null && password != null) {
       Map<String, String>? data = await logIn(login, password);
       if (data != null) {
@@ -35,7 +41,7 @@ class AuthCubit extends Cubit<AuthState> {
           email: login, password: password);
       User? user = result.user;
       if (user != null) {
-        await Storage.setData(login, password);
+        await _storage.setData(login, password);
         emit(AuthSuccess());
         return {'id': user.uid, 'login': login, 'password': password};
       } else {
@@ -43,13 +49,26 @@ class AuthCubit extends Cubit<AuthState> {
         return null;
       }
     } catch (error) {
+      print(error);
       emit(AuthError());
       return null;
     }
   }
 
-  void emptyFields() {
-    emit(AuthEmptyFields());
+  bool isEmptyFieldsAuth(String login, String password) {
+    if (login.isEmpty || password.isEmpty) {
+      emit(AuthEmptyFields());
+      return true;
+    }
+    return false;
+  }
+
+  bool isEmptyFieldsRegister(String name, String login, String password) {
+    if (name.isEmpty || login.isEmpty || password.isEmpty) {
+      emit(AuthEmptyFields());
+      return true;
+    }
+    return false;
   }
 
   void noAccount() {
@@ -63,7 +82,7 @@ class AuthCubit extends Cubit<AuthState> {
           email: login, password: password);
       User? user = result.user;
       if (user != null) {
-        await Storage.setData(login, password);
+        await _storage.setData(login, password);
         emit(AuthSuccess());
         await UsersFile.addUser(user.uid);
         return {
@@ -76,14 +95,15 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthError());
         return null;
       }
-    } catch (e) {
+    } catch (error) {
+      //print(error);
       emit(AuthError());
       return null;
     }
   }
 
   Future<void> logOut() async {
-    await Storage.clear();
+    await _storage.clear();
     await _auth.signOut();
   }
 }

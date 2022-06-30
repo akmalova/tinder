@@ -8,3 +8,9 @@ class AppInitial extends AppState {}
 class AppCards extends AppState {}
 
 class AppFinish extends AppState {}
+
+class AppUserState extends AppState {
+  final AppUser _user;
+
+  AppUserState(this._user);
+}

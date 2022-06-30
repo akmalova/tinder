@@ -6,14 +6,14 @@ import 'package:tinder/cubit/app_cubit.dart';
 import 'package:tinder/cubit/auth_cubit.dart';
 import 'package:tinder/routes.dart';
 
-class Initial extends StatefulWidget {
-  const Initial({super.key});
+class AuthInitial extends StatefulWidget {
+  const AuthInitial({super.key});
 
   @override
-  State<Initial> createState() => _InitialState();
+  State<AuthInitial> createState() => _AuthInitialState();
 }
 
-class _InitialState extends State<Initial> {
+class _AuthInitialState extends State<AuthInitial> {
   late final Map<String, String> _data;
   late final Timer _timer;
 
@@ -21,18 +21,24 @@ class _InitialState extends State<Initial> {
     Map<String, String>? data = await context.read<AuthCubit>().automaticAuth();
     if (data != null) {
       _data = data;
-      initUser();
+      await initUser();
     }
   }
 
   Future<void> initUser() async {
-    await context.read<AppCubit>().initUser(
+    await context.read<AppCubit>().initUserAuth(
         id: _data['id']!, login: _data['login']!, password: _data['password']!);
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    context.read<AuthCubit>().initStorage();
     _timer = Timer(const Duration(seconds: 1), auth);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
         if (state is AuthSuccess) {

@@ -16,7 +16,7 @@ class UsersFile {
 
   static Future<void> addUser(String id) async {
     File file = await getFile();
-    //file.delete(); // для отладки
+    file.delete(); // для отладки
     if (!await file.exists()) {
       // получим готовых пользователей из файла
       createFile(file);

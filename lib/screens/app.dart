@@ -20,8 +20,13 @@ class _AppState extends State<App> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     _timer = Timer(const Duration(seconds: 2), initData);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: BlocConsumer<AppCubit, AppState>(listener: (context, state) {
         if (state is AppCards) {
