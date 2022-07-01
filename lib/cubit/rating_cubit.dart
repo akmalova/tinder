@@ -6,15 +6,15 @@ part 'rating_state.dart';
 class RatingCubit extends Cubit<RatingState> {
   RatingCubit() : super(RatingInitial());
 
-  void selLikes() {
+  void setInitial() {
+    emit(RatingInitial());
+  }
+
+  void setLikes() {
     emit(RatingLikes());
   }
 
-  void selDislikes() {
+  void setDislikes() {
     emit(RatingDislikes());
-  }
-
-  void setInitial() {
-    emit(RatingInitial());
   }
 }

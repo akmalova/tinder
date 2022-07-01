@@ -10,7 +10,10 @@ part 'app_state.dart';
 class AppCubit extends Cubit<AppState> {
   final DatabaseService database;
   late AppUser _user;
+  Map<String, String> _usersImages = {};
   final List<Tuple2<String, String>> _data = [];
+  final List<Tuple2<String, String>> _likedUsers = [];
+  final List<Tuple2<String, String>> _dislikedUsers = [];
 
   AppCubit(this.database) : super(AppInitial());
 
@@ -29,7 +32,7 @@ class AppCubit extends Cubit<AppState> {
     List<String> dislikes = [];
     if (data['dislikes'] != null) {
       for (var element in data['dislikes']) {
-        likes.add(element.toString());
+        dislikes.add(element.toString());
       }
     }
     _user = AppUser(
@@ -86,13 +89,13 @@ class AppCubit extends Cubit<AppState> {
   }
 
   Future<void> initData() async {
-    Map<String, String> users = await UsersFile.getUsers();
-    Iterable<String> usersId = users.keys;
+    _usersImages = await UsersFile.getUsers();
+    Iterable<String> usersId = _usersImages.keys;
     for (String id in usersId) {
       if (!_user.likes.contains(id) &&
           !_user.dislikes.contains(id) &&
           _user.id != id) {
-        _data.add(Tuple2(id, users[id]!));
+        _data.add(Tuple2(id, _usersImages[id]!));
       }
     }
     if (_data.isEmpty) {
@@ -107,28 +110,34 @@ class AppCubit extends Cubit<AppState> {
   }
 
   Future<List<Tuple2<String, String>>> getLikes() async {
-    List<Tuple2<String, String>> likedUsers = [];
     List<String> likedId = _user.likes;
-    Map<String, String> usersImages = await UsersFile.getUsers();
     for (String id in likedId) {
       Map<String, dynamic> userData = await database.getData(id);
-      likedUsers.add(Tuple2(usersImages[id]!, userData['name']));
+      _likedUsers.add(Tuple2(_usersImages[id]!, userData['name']));
     }
-    return likedUsers;
+    return _likedUsers;
   }
 
   Future<List<Tuple2<String, String>>> getDislikes() async {
-    List<Tuple2<String, String>> dislikedUsers = [];
     List<String> dislikedId = _user.dislikes;
-    Map<String, String> usersImages = await UsersFile.getUsers();
     for (String id in dislikedId) {
       Map<String, dynamic> userData = await database.getData(id);
-      dislikedUsers.add(Tuple2(usersImages[id]!, userData['name']));
+      _dislikedUsers.add(Tuple2(_usersImages[id]!, userData['name']));
     }
-    return dislikedUsers;
+    return _dislikedUsers;
+  }
+
+  List<Tuple2<String, String>> get likedUsers {
+    return _likedUsers;
+  }
+
+  List<Tuple2<String, String>> get dislikedUsers {
+    return _dislikedUsers;
   }
 
   void clear() {
     _data.clear();
+    _likedUsers.clear();
+    _dislikedUsers.clear();
   }
 }

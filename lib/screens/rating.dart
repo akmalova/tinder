@@ -14,83 +14,98 @@ class Rating extends StatefulWidget {
 }
 
 class _RatingState extends State<Rating> {
-  final List<Widget> _likedUsers = [];
-  final List<Widget> _dislikedUsers = [];
-  late final Timer _timer1;
-  late final Timer _timer2;
+  final List<Tuple2<String, String>> _likedUsers = [];
+  final List<Tuple2<String, String>> _dislikedUsers = [];
+  final List<Widget> _likedUsersWidget = [];
+  final List<Widget> _dislikedUsersWidget = [];
 
   Future<void> getLikedUsers() async {
-    List<Tuple2<String, String>> likedUsers =
-        await context.read<AppCubit>().getLikes();
-    for (Tuple2 tuple in likedUsers) {
-      _likedUsers.add(_listItem(tuple.item1, tuple.item2));
+    _likedUsers.addAll(await context.read<AppCubit>().getLikes());
+    getLikedUsersWidget();
+    context.read<RatingCubit>().setLikes();
+  }
+
+  void getLikedUsersWidget() {
+    for (Tuple2 tuple in _likedUsers) {
+      _likedUsersWidget.add(_listItem(tuple.item1, tuple.item2));
     }
   }
 
-  Future<void> getDislikedUsers() async {
-    List<Tuple2<String, String>> dislikedUsers =
-        await context.read<AppCubit>().getDislikes();
-    for (Tuple2 tuple in dislikedUsers) {
-      _dislikedUsers.add(_listItem(tuple.item1, tuple.item2));
+  void getDislikedUsers() async {
+    _dislikedUsers.addAll(await context.read<AppCubit>().getDislikes());
+    getDislikedUsersWidget();
+  }
+
+  void getDislikedUsersWidget() {
+    for (Tuple2 tuple in _dislikedUsers) {
+      _dislikedUsersWidget.add(_listItem(tuple.item1, tuple.item2));
     }
   }
 
   @override
   void initState() {
-    _timer1 = Timer(const Duration(seconds: 1), getLikedUsers);
-    _timer2 = Timer(const Duration(seconds: 1), getDislikedUsers);
+    _likedUsers.addAll(context.read<AppCubit>().likedUsers);
+    _dislikedUsers.addAll(context.read<AppCubit>().dislikedUsers);
+    if (_likedUsers.isEmpty || _dislikedUsers.isEmpty) {
+      getLikedUsers();
+      getDislikedUsers();
+    } else {
+      getLikedUsersWidget();
+      getDislikedUsersWidget();
+    }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Оценки'),
-        backgroundColor: Colors.deepPurple[400],
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              context.read<RatingCubit>().selLikes();
-            },
-            child: const Text('Лайки',
-                style: TextStyle(fontSize: 18, color: Colors.white)),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.deepPurple[400],
+          bottom: const TabBar(
+            indicatorColor: Colors.white,
+            tabs: [
+              Tab(icon: Icon(Icons.favorite)),
+              Tab(icon: Icon(Icons.heart_broken)),
+            ],
           ),
-          TextButton(
-            onPressed: () {
-              context.read<RatingCubit>().selDislikes();
-            },
-            child: const Text('Дизлайки',
-                style: TextStyle(fontSize: 18, color: Colors.white)),
-          ),
-        ],
-      ),
-      body: BlocBuilder<RatingCubit, RatingState>(
-        builder: (context, state) {
-          if (state is RatingLikes) {
-            return ListView(
-              children: _likedUsers,
-            );
-          } else if (state is RatingDislikes) {
-            return ListView(
-              children: _dislikedUsers,
-            );
-          } else {
-            return Center(
-              child: Text(
-                'Выберите, что вы хотите посмотреть',
-                style: TextStyle(fontSize: 20, color: Colors.grey[500]),
-              ),
-            );
-          }
-        },
+          title: const Text('Оценки'),
+        ),
+        body: TabBarView(
+          children: [
+            BlocBuilder<RatingCubit, RatingState>(
+              builder: (context, state) {
+                if (state is RatingLikes) {
+                  return ListView(
+                    children: _likedUsersWidget,
+                  );
+                } else {
+                  return Center(
+                    child: SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: CircularProgressIndicator(
+                        color: Colors.deepPurple[400],
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
+            ListView(
+              children: _dislikedUsersWidget,
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _listItem(String image, String name) {
     return Container(
-      margin: const EdgeInsets.all(10),
+      margin: const EdgeInsets.all(5),
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -102,6 +117,7 @@ class _RatingState extends State<Rating> {
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 1,
             blurRadius: 5,
+            offset: const Offset(0, 5),
           ),
         ],
       ),
@@ -109,42 +125,29 @@ class _RatingState extends State<Rating> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            height: 100,
-            width: 100,
+            height: 70,
+            width: 70,
             decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(
+                Radius.circular(40),
+              ),
               image: DecorationImage(
                 image: Image.asset(image).image,
                 fit: BoxFit.cover,
               ),
             ),
           ),
-          const SizedBox(width: 20),
-          Expanded(
+          const SizedBox(width: 25),
+          Container(
+            height: 70,
+            alignment: Alignment.centerRight,
             child: Text(
               name,
               style: const TextStyle(fontSize: 18),
             ),
           ),
-          BlocBuilder<RatingCubit, RatingState>(
-            builder: (context, state) {
-              if (state is RatingLikes) {
-                return Icon(Icons.favorite, color: Colors.deepPurple[400]);
-              } else {
-                return Icon(Icons.heart_broken, color: Colors.deepPurple[400]);
-              }
-            },
-          ),
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _timer1.cancel();
-    _timer2.cancel();
-    _likedUsers.clear();
-    _dislikedUsers.clear();
-    super.dispose();
   }
 }
