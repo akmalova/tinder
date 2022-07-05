@@ -1,10 +1,11 @@
 class AppUser {
-  String id;
+  final String id;
   final String name;
-  String login;
-  String password;
+  final String login;
+  final String password;
   final List<String> likes;
   final List<String> dislikes;
+  final String? image;
 
   AppUser(
       {required this.id,
@@ -12,7 +13,8 @@ class AppUser {
       required this.login,
       required this.password,
       required this.likes,
-      required this.dislikes});
+      required this.dislikes,
+      required this.image});
 
   Map<String, dynamic> toMap() {
     return {
@@ -22,6 +24,7 @@ class AppUser {
       'password': password,
       'likes': likes,
       'dislikes': dislikes,
+      'image': image,
     };
   }
 }

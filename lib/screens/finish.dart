@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:tinder/cubit/auth_cubit.dart';
 import 'package:tinder/cubit/app_cubit.dart';
 import 'package:tinder/routes.dart';
@@ -9,6 +9,7 @@ class Finish extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<AppCubit>().getLikedAndDisliked();
     return Scaffold(
       floatingActionButton: TextButton(
         child: Text(

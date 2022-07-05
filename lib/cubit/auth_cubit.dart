@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinder/services/storage.dart';
-import 'package:tinder/services/users_file.dart';
 
 part 'auth_state.dart';
 
@@ -11,7 +10,7 @@ class AuthCubit extends Cubit<AuthState> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   late final Storage _storage;
 
-  AuthCubit() : super(AuthInitial());
+  AuthCubit() : super(AuthInitialState());
 
   Future<void> initStorage() async {
     _storage = Storage(await SharedPreferences.getInstance());
@@ -22,9 +21,7 @@ class AuthCubit extends Cubit<AuthState> {
     String? password = _storage.getPassword();
     if (login != null && password != null) {
       Map<String, String>? data = await logIn(login, password);
-      if (data != null) {
-        emit(AuthSuccess());
-      } else {
+      if (data == null) {
         emit(AuthPage());
       }
       return data;
@@ -49,7 +46,7 @@ class AuthCubit extends Cubit<AuthState> {
         return null;
       }
     } catch (error) {
-      print(error);
+      //print(error);
       emit(AuthError());
       return null;
     }
@@ -65,14 +62,14 @@ class AuthCubit extends Cubit<AuthState> {
 
   bool isEmptyFieldsRegister(String name, String login, String password) {
     if (name.isEmpty || login.isEmpty || password.isEmpty) {
-      emit(AuthEmptyFields());
+      emit(RegistrationEmptyFields());
       return true;
     }
     return false;
   }
 
   void noAccount() {
-    emit(AuthRegistration());
+    emit(RegistrationInitial());
   }
 
   Future<Map<String, String>?> register(
@@ -83,8 +80,7 @@ class AuthCubit extends Cubit<AuthState> {
       User? user = result.user;
       if (user != null) {
         await _storage.setData(login, password);
-        emit(AuthSuccess());
-        await UsersFile.addUser(user.uid);
+        emit(RegistrationSuccess());
         return {
           'id': user.uid,
           'name': name,
@@ -92,12 +88,12 @@ class AuthCubit extends Cubit<AuthState> {
           'password': password
         };
       } else {
-        emit(AuthError());
+        emit(RegistrationError());
         return null;
       }
     } catch (error) {
       //print(error);
-      emit(AuthError());
+      emit(RegistrationError());
       return null;
     }
   }

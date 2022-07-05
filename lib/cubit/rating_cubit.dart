@@ -10,11 +10,7 @@ class RatingCubit extends Cubit<RatingState> {
     emit(RatingInitial());
   }
 
-  void setLikes() {
-    emit(RatingLikes());
-  }
-
-  void setDislikes() {
-    emit(RatingDislikes());
+  void setSuccess() {
+    emit(RatingSuccess());
   }
 }

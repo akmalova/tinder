@@ -10,7 +10,7 @@ class AppCards extends AppState {}
 class AppFinish extends AppState {}
 
 class AppUserState extends AppState {
-  final AppUser _user;
+  final AppUser user;
 
-  AppUserState(this._user);
+  AppUserState(this.user);
 }

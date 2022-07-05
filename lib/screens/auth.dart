@@ -21,11 +21,13 @@ class _AuthState extends State<Auth> {
   Future<void> _onLoginPressed() async {
     _login = loginController.text.trim();
     _password = passwordController.text.trim();
+
+    // Проверка полей на пустоту, если пустые - выдается ошибка
     if (!context.read<AuthCubit>().isEmptyFieldsAuth(_login, _password)) {
       Map<String, String>? data =
           await context.read<AuthCubit>().logIn(_login, _password);
       if (data != null) {
-        initUser(data);
+        await initUser(data);
       }
     }
   }
@@ -43,6 +45,7 @@ class _AuthState extends State<Auth> {
       },
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: const Text('Авторизация'),
           backgroundColor: Colors.deepPurple[400],
           centerTitle: true,
@@ -98,30 +101,34 @@ class _AuthState extends State<Auth> {
                     height: 20,
                   ),
                   BlocConsumer<AuthCubit, AuthState>(
-                      listener: (context, state) {
-                    if (state is AuthSuccess) {
-                      Navigator.of(context).pushReplacementNamed(Routes.app);
-                    } else if (state is AuthRegistration) {
-                      Navigator.of(context).pushNamed(Routes.registration);
-                    }
-                  }, builder: (context, state) {
-                    if (state is AuthError) {
-                      return Text(
-                        'Неправильный логин или пароль',
-                        style: TextStyle(fontSize: 17, color: Colors.red[600]),
-                      );
-                    } else if (state is AuthEmptyFields) {
-                      return Text(
-                        'Поля должны быть заполнены',
-                        style: TextStyle(fontSize: 17, color: Colors.red[600]),
-                      );
-                    } else if (state is AuthInProgress) {
-                      return CircularProgressIndicator(
-                          color: Colors.deepPurple[400]);
-                    } else {
-                      return const Text('');
-                    }
-                  }),
+                    listener: (context, state) {
+                      if (state is AuthSuccess) {
+                        Navigator.of(context).pushReplacementNamed(Routes.app);
+                      } else if (state is RegistrationInitial) {
+                        Navigator.of(context).pushNamed(Routes.registration);
+                      }
+                    },
+                    builder: (context, state) {
+                      if (state is AuthError) {
+                        return Text(
+                          'Неправильный логин или пароль',
+                          style:
+                              TextStyle(fontSize: 17, color: Colors.red[600]),
+                        );
+                      } else if (state is AuthEmptyFields) {
+                        return Text(
+                          'Поля должны быть заполнены',
+                          style:
+                              TextStyle(fontSize: 17, color: Colors.red[600]),
+                        );
+                      } else if (state is AuthInProgress) {
+                        return CircularProgressIndicator(
+                            color: Colors.deepPurple[400]);
+                      } else {
+                        return const Text('');
+                      }
+                    },
+                  ),
                   const SizedBox(
                     height: 20,
                   ),

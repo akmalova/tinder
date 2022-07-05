@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 import 'package:tinder/cubit/auth_cubit.dart';
 import 'package:tinder/cubit/app_cubit.dart';
@@ -14,28 +15,27 @@ class Cards extends StatefulWidget {
 }
 
 class _CardsState extends State<Cards> {
-  final List<Tuple2<String, String>> _data = [];
+  final List<Tuple2<String, String>> _idsAndImages = [];
   final List<SwipeItem> _swipeItems = <SwipeItem>[];
   late final MatchEngine _matchEngine;
 
-  void initData() {
-    _data.addAll(context.read<AppCubit>().data);
+  void initIdsAndImages() {
+    _idsAndImages.addAll(context.read<AppCubit>().idsAndImages);
   }
 
   @override
   void initState() {
-    initData();
-    //print('DATA $_data');
-    for (int i = 0; i < _data.length; i++) {
+    initIdsAndImages();
+    for (int i = 0; i < _idsAndImages.length; i++) {
       _swipeItems.add(
         SwipeItem(
-          content: buildCard(_data[i].item2),
+          content: buildCard(_idsAndImages[i].item2),
           likeAction: () {
-            context.read<AppCubit>().addLike(_data[i].item1);
+            context.read<AppCubit>().addLike(_idsAndImages[i].item1);
             snackBar('Liked');
           },
           nopeAction: () {
-            context.read<AppCubit>().addDislike(_data[i].item1);
+            context.read<AppCubit>().addDislike(_idsAndImages[i].item1);
             snackBar('Disliked');
           },
         ),
@@ -159,5 +159,11 @@ class _CardsState extends State<Cards> {
         duration: const Duration(milliseconds: 500),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _idsAndImages.clear();
+    super.dispose();
   }
 }

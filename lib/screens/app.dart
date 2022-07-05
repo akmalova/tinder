@@ -3,8 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinder/cubit/app_cubit.dart';
-import 'package:tinder/routes.dart';
+import 'package:tinder/screens/cards.dart';
+import 'package:tinder/screens/finish.dart';
 
+// Cтраница, которая откроет либо карточки с другими пользователями,
+// либо страницу финиша, если карточек не осталось
 class App extends StatefulWidget {
   const App({super.key});
 
@@ -16,35 +19,37 @@ class _AppState extends State<App> {
   late final Timer _timer;
 
   Future<void> initData() async {
-    await context.read<AppCubit>().initData();
+    await context.read<AppCubit>().initIdsAndImages();
   }
 
   @override
   void initState() {
-    _timer = Timer(const Duration(seconds: 2), initData);
+    _timer = Timer(const Duration(milliseconds: 600), initData);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<AppCubit, AppState>(listener: (context, state) {
-        if (state is AppCards) {
-          Navigator.of(context).pushReplacementNamed(Routes.cards);
-        } else if (state is AppFinish) {
-          Navigator.of(context).pushReplacementNamed(Routes.finish);
-        }
-      }, builder: (context, state) {
-        return Center(
-          child: SizedBox(
-            height: 50,
-            width: 50,
-            child: CircularProgressIndicator(
-              color: Colors.deepPurple[400],
-            ),
-          ),
-        );
-      }),
+      body: BlocBuilder<AppCubit, AppState>(
+        builder: (context, state) {
+          if (state is AppCards) {
+            return const Cards();
+          } else if (state is AppFinish) {
+            return const Finish();
+          } else {
+            return Center(
+              child: SizedBox(
+                height: 50,
+                width: 50,
+                child: CircularProgressIndicator(
+                  color: Colors.deepPurple[400],
+                ),
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 

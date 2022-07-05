@@ -5,6 +5,4 @@ abstract class RatingState {}
 
 class RatingInitial extends RatingState {}
 
-class RatingLikes extends RatingState {}
-
-class RatingDislikes extends RatingState {}
+class RatingSuccess extends RatingState {}

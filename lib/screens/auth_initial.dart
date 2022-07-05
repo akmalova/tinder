@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinder/cubit/app_cubit.dart';
 import 'package:tinder/cubit/auth_cubit.dart';
-import 'package:tinder/routes.dart';
+import 'package:tinder/screens/app.dart';
+import 'package:tinder/screens/auth.dart';
 
+// Начальная страница приложения, которая откроет либо страницу авторизации,
+// либо само приложение, если пользователь уже авторизован
 class AuthInitial extends StatefulWidget {
   const AuthInitial({super.key});
 
@@ -18,6 +21,7 @@ class _AuthInitialState extends State<AuthInitial> {
   late final Timer _timer;
 
   Future<void> auth() async {
+    // Попытка автоматического входа в приложение
     Map<String, String>? data = await context.read<AuthCubit>().automaticAuth();
     if (data != null) {
       _data = data;
@@ -33,29 +37,30 @@ class _AuthInitialState extends State<AuthInitial> {
   @override
   void initState() {
     context.read<AuthCubit>().initStorage();
-    _timer = Timer(const Duration(seconds: 1), auth);
+    _timer = Timer(const Duration(milliseconds: 1), auth);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
+      body: BlocBuilder<AuthCubit, AuthState>(
+          builder: (context, state) {
         if (state is AuthSuccess) {
-          Navigator.of(context).pushReplacementNamed(Routes.app);
+          return const App();
         } else if (state is AuthPage) {
-          Navigator.of(context).pushReplacementNamed(Routes.auth);
-        }
-      }, builder: (context, state) {
-        return Center(
-          child: SizedBox(
-            height: 50,
-            width: 50,
-            child: CircularProgressIndicator(
-              color: Colors.deepPurple[400],
+          return const Auth();
+        } else {
+          return Center(
+            child: SizedBox(
+              height: 50,
+              width: 50,
+              child: CircularProgressIndicator(
+                color: Colors.deepPurple[400],
+              ),
             ),
-          ),
-        );
+          );
+        }
       }),
     );
   }

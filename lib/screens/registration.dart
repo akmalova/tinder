@@ -24,6 +24,8 @@ class _RegistrationState extends State<Registration> {
     _name = nameController.text.trim();
     _login = loginController.text.trim();
     _password = passwordController.text.trim();
+
+    // Проверка полей на пустоту
     if (!context
         .read<AuthCubit>()
         .isEmptyFieldsRegister(_name, _login, _password)) {
@@ -123,21 +125,22 @@ class _RegistrationState extends State<Registration> {
                   height: 20,
                 ),
                 BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
-                  if (state is AuthSuccess) {
-                    Navigator.of(context).pushReplacementNamed(Routes.app);
+                  if (state is RegistrationSuccess) {
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil(Routes.app, (_) => false);
                   }
                 }, builder: (context, state) {
-                  if (state is AuthEmptyFields) {
+                  if (state is RegistrationEmptyFields) {
                     return Text(
                       'Поля должны быть заполнены',
                       style: TextStyle(fontSize: 17, color: Colors.red[600]),
                     );
-                  } else if (state is AuthError) {
+                  } else if (state is RegistrationError) {
                     return Text(
                       'Ошибка регистрации',
                       style: TextStyle(fontSize: 17, color: Colors.red[600]),
                     );
-                  } else if (state is AuthInProgress) {
+                  } else if (state is RegistrationInProgress) {
                     return CircularProgressIndicator(
                         color: Colors.deepPurple[400]);
                   } else {
