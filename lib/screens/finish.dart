@@ -9,7 +9,7 @@ class Finish extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<AppCubit>().getLikedAndDisliked();
+    //context.read<RatingCubit>().getLikedAndDisliked();
     return Scaffold(
       floatingActionButton: TextButton(
         child: Text(

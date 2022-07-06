@@ -37,8 +37,8 @@ class _RegistrationState extends State<Registration> {
     }
   }
 
-  Future<void> initUser(Map<String, String> data) async {
-    await context.read<AppCubit>().initUserRegister(
+  void initUser(Map<String, String> data) {
+    context.read<AppCubit>().initUserRegister(
         id: data['id']!,
         name: data['name']!,
         login: data['email']!,

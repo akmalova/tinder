@@ -31,7 +31,10 @@ class _AuthInitialState extends State<AuthInitial> {
 
   Future<void> initUser() async {
     await context.read<AppCubit>().initUserAuth(
-        id: _data['id']!, login: _data['login']!, password: _data['password']!);
+          id: _data['id']!,
+          login: _data['login']!,
+          password: _data['password']!,
+        );
   }
 
   @override
@@ -44,25 +47,24 @@ class _AuthInitialState extends State<AuthInitial> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<AuthCubit, AuthState>(
-          builder: (context, state) {
-        if (state is AuthSuccess) {
-          return const App();
-        } else if (state is AuthPage) {
-          return const Auth();
-        } else {
-          return Center(
-            child: SizedBox(
-              height: 50,
-              width: 50,
-              child: CircularProgressIndicator(
-                color: Colors.deepPurple[400],
+        body: BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
+          if (state is AuthSuccess) {
+            return const App();
+          } else if (state is AuthPage) {
+            return const Auth();
+          } else {
+            return Center(
+              child: SizedBox(
+                height: 50,
+                width: 50,
+                child: CircularProgressIndicator(
+                  color: Colors.deepPurple[400],
+                ),
               ),
-            ),
-          );
-        }
-      }),
-    );
+            );
+          }
+        }),
+      );
   }
 
   @override

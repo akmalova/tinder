@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tinder/cubit/app_cubit.dart';
 import 'package:tinder/cubit/rating_cubit.dart';
 import 'package:tuple/tuple.dart';
 
@@ -17,9 +16,9 @@ class _RatingState extends State<Rating> {
 
   void getUsers() {
     List<Tuple2<String, String>> likedUsers =
-        context.read<AppCubit>().likedUsers;
+        context.read<RatingCubit>().getLikedUsers();
     List<Tuple2<String, String>> dislikedUsers =
-        context.read<AppCubit>().dislikedUsers;
+        context.read<RatingCubit>().getDislikedUsers();
 
     for (Tuple2 tuple in likedUsers) {
       _likedUsersWidget.add(_listItem(tuple.item1, tuple.item2));
@@ -27,7 +26,6 @@ class _RatingState extends State<Rating> {
     for (Tuple2 tuple in dislikedUsers) {
       _dislikedUsersWidget.add(_listItem(tuple.item1, tuple.item2));
     }
-    context.read<RatingCubit>().setSuccess();
   }
 
   @override

@@ -27,13 +27,13 @@ class _AuthState extends State<Auth> {
       Map<String, String>? data =
           await context.read<AuthCubit>().logIn(_login, _password);
       if (data != null) {
-        await initUser(data);
+        initUser(data);
       }
     }
   }
 
-  Future<void> initUser(Map<String, String> data) async {
-    await context.read<AppCubit>().initUserAuth(
+  void initUser(Map<String, String> data) {
+    context.read<AppCubit>().initUserAuth(
         id: data['id']!, login: data['login']!, password: data['password']!);
   }
 

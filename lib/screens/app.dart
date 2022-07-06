@@ -17,6 +17,8 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   late final Timer _timer;
+  
+  late AppCubit _appCubit;
 
   Future<void> initData() async {
     await context.read<AppCubit>().initIdsAndImages();
@@ -54,7 +56,14 @@ class _AppState extends State<App> {
   }
 
   @override
+  void didChangeDependencies() {
+    _appCubit = context.read<AppCubit>();
+    super.didChangeDependencies();
+  }
+
+  @override
   void dispose() {
+    _appCubit.setInitial();
     _timer.cancel();
     super.dispose();
   }

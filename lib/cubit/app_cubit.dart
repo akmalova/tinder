@@ -2,26 +2,28 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:tinder/models/app_user.dart';
 import 'package:tinder/services/database_service.dart';
+import 'package:tinder/services/user_service.dart';
 import 'package:tuple/tuple.dart';
 
 part 'app_state.dart';
 
 class AppCubit extends Cubit<AppState> {
-  late AppUser _user;
-  final DatabaseService database;
-  final List<Map<String, String>> _users = [];
+  final DatabaseService _databaseService;
+  final UserService _userService;
   final List<Tuple2<String, String>> _idsAndImages = [];
-  final List<Tuple2<String, String>> _likedUsers = [];
-  final List<Tuple2<String, String>> _dislikedUsers = [];
 
-  AppCubit(this.database) : super(AppInitial());
+  AppCubit(this._databaseService, this._userService) : super(AppInitial());
+
+  void setInitial() {
+    emit(AppInitial());
+  }
 
   // Инициализация юзера во время авторизации
   Future<void> initUserAuth(
       {required String id,
       required String login,
       required String password}) async {
-    Map<String, dynamic> data = await database.getUserData(id);
+    Map<String, dynamic> data = await _databaseService.getUserData(id);
     String name = data['name'];
     List<String> likes = [];
     if (data['likes'] != null) {
@@ -36,7 +38,7 @@ class AppCubit extends Cubit<AppState> {
       }
     }
     String image = data['image'];
-    _user = AppUser(
+    _userService.user = AppUser(
         id: id,
         login: login,
         password: password,
@@ -44,7 +46,6 @@ class AppCubit extends Cubit<AppState> {
         likes: likes,
         dislikes: dislikes,
         image: image);
-    emit(AppUserState(_user));
   }
 
   // Инициализация юзера во время регистрации
@@ -53,8 +54,8 @@ class AppCubit extends Cubit<AppState> {
       required String name,
       required String login,
       required String password}) async {
-    int usersCount = await database.getUsersCount();
-    _user = AppUser(
+    int usersCount = await _databaseService.getUsersCount();
+    _userService.user = AppUser(
         id: id,
         login: login,
         password: password,
@@ -62,39 +63,36 @@ class AppCubit extends Cubit<AppState> {
         likes: [],
         dislikes: [],
         image: 'assets/images/${usersCount + 1}.jpg');
-    emit(AppUserState(_user));
-    database.setUserData(_user);
+    _databaseService.setUserData(_userService.user!);
   }
 
   Future<void> addLike(String id) async {
-    _user.likes.add(id);
-    await database.setUserData(_user);
+    _userService.user!.likes.add(id);
+    await _databaseService.setUserData(_userService.user!);
   }
 
   Future<void> addDislike(String id) async {
-    _user.dislikes.add(id);
-    await database.setUserData(_user);
+    _userService.user!.dislikes.add(id);
+    await _databaseService.setUserData(_userService.user!);
   }
 
   // Инициализация списка всех юзеров
   Future<void> initUsers() async {
-    if (_users.isEmpty) {
-      _users.addAll(await database.getUsers());
-    }
+    _userService.users ??= await _databaseService.getUsers();
   }
 
   // Инициализация списка айди и изображений юзеров
   Future<void> initIdsAndImages() async {
     await initUsers();
     final Map<String, String> usersImages = {};
-    for (Map<String, String> map in _users) {
+    for (Map<String, String> map in _userService.users!) {
       usersImages[map['id']!] = map['image']!;
     }
     Iterable<String> usersIds = usersImages.keys;
     for (String id in usersIds) {
-      if (!_user.likes.contains(id) &&
-          !_user.dislikes.contains(id) &&
-          _user.id != id) {
+      if (!_userService.user!.likes.contains(id) &&
+          !_userService.user!.dislikes.contains(id) &&
+          _userService.user!.id != id) {
         _idsAndImages.add(Tuple2(id, usersImages[id]!));
       }
     }
@@ -109,47 +107,7 @@ class AppCubit extends Cubit<AppState> {
     return _idsAndImages;
   }
 
-  void getLikedAndDisliked() {
-    getLikedUsers();
-    getDislikedUsers();
-  }
-
-  List<Tuple2<String, String>> getLikedUsers() {
-    List<String> likedId = _user.likes;
-    for (String id in likedId) {
-      for (Map<String, String> map in _users) {
-        if (map['id'] == id) {
-          _likedUsers.add(Tuple2(map['image']!, map['name']!));
-        }
-      }
-    }
-    return _likedUsers;
-  }
-
-  List<Tuple2<String, String>> getDislikedUsers() {
-    List<String> dislikedId = _user.dislikes;
-    for (String id in dislikedId) {
-      for (Map<String, String> map in _users) {
-        if (map['id'] == id) {
-          _dislikedUsers.add(Tuple2(map['image']!, map['name']!));
-        }
-      }
-    }
-    return _dislikedUsers;
-  }
-
-  List<Tuple2<String, String>> get likedUsers {
-    return _likedUsers;
-  }
-
-  List<Tuple2<String, String>> get dislikedUsers {
-    return _dislikedUsers;
-  }
-
   void clear() {
-    _users.clear();
     _idsAndImages.clear();
-    _likedUsers.clear();
-    _dislikedUsers.clear();
   }
 }
