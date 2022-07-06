@@ -15,20 +15,22 @@ class AuthSuccess extends AuthState {}
 
 class AuthInProgress extends AuthState {}
 
-class RegistrationInitial extends AuthState {}
+class AuthRegistration extends AuthState {}
 
-class RegistrationError extends AuthState {}
+// class RegistrationInitial extends AuthState {}
 
-class RegErrorEmailInUse extends AuthState {}
+// class RegistrationError extends AuthState {}
 
-class RegErrorInvalidEmail extends AuthState {}
+// class RegErrorEmailInUse extends AuthState {}
 
-class RegErrorDisabledAccount extends AuthState {}
+// class RegErrorInvalidEmail extends AuthState {}
 
-class RegErrorShortPassword extends AuthState {}
+// class RegErrorDisabledAccount extends AuthState {}
 
-class RegistrationEmptyFields extends AuthState {}
+// class RegErrorShortPassword extends AuthState {}
 
-class RegistrationSuccess extends AuthState {}
+// class RegistrationEmptyFields extends AuthState {}
 
-class RegistrationInProgress extends AuthState {}
+// class RegistrationSuccess extends AuthState {}
+
+// class RegistrationInProgress extends AuthState {}

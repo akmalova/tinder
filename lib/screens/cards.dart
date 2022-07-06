@@ -91,7 +91,9 @@ class _CardsState extends State<Cards> {
       height: 450,
       decoration: BoxDecoration(
         color: Colors.red[50],
-        borderRadius: const BorderRadius.all(Radius.circular(25)),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(25),
+        ),
         border: Border.all(
           color: Colors.red,
         ),
@@ -102,7 +104,9 @@ class _CardsState extends State<Cards> {
           Container(
             height: 320,
             decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(25)),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(25),
+              ),
               image: DecorationImage(
                 image: Image.asset(image).image,
                 fit: BoxFit.cover,
@@ -117,19 +121,31 @@ class _CardsState extends State<Cards> {
             children: <Widget>[
               GestureDetector(
                 onTap: () {
-                  _matchEngine.currentItem!.like();
+                  _matchEngine.currentItem!.nope();
                 },
                 child: Container(
                   height: 70,
                   width: 70,
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.all(Radius.circular(40)),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(40),
+                    ),
                   ),
+                  child: const Icon(Icons.heart_broken,
+                      size: 50, color: Colors.red),
                 ),
               ),
               const SizedBox(
-                width: 100,
+                width: 120,
               ),
               GestureDetector(
                 onTap: () {
@@ -138,10 +154,22 @@ class _CardsState extends State<Cards> {
                 child: Container(
                   height: 70,
                   width: 70,
-                  decoration: const BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.all(Radius.circular(40)),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(40),
+                    ),
                   ),
+                  child:
+                      const Icon(Icons.favorite, size: 50, color: Colors.green),
                 ),
               ),
             ],

@@ -104,7 +104,7 @@ class _AuthState extends State<Auth> {
                     listener: (context, state) {
                       if (state is AuthSuccess) {
                         Navigator.of(context).pushReplacementNamed(Routes.app);
-                      } else if (state is RegistrationInitial) {
+                      } else if (state is AuthRegistration) {
                         Navigator.of(context).pushNamed(Routes.registration);
                       }
                     },
@@ -150,7 +150,7 @@ class _AuthState extends State<Auth> {
                   ),
                   TextButton(
                     onPressed: () {
-                      context.read<AuthCubit>().noAccount();
+                      context.read<AuthCubit>().setRegistration();
                     },
                     child: Text(
                       'Нет аккаунта',

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tinder/cubit/auth_cubit.dart';
 import 'package:tinder/cubit/app_cubit.dart';
+import 'package:tinder/cubit/registration_cubit.dart';
 import 'package:tinder/routes.dart';
 
 class Registration extends StatefulWidget {
@@ -27,10 +27,11 @@ class _RegistrationState extends State<Registration> {
 
     // Проверка полей на пустоту
     if (!context
-        .read<AuthCubit>()
+        .read<RegistrationCubit>()
         .isEmptyFieldsRegister(_name, _login, _password)) {
-      Map<String, String>? data =
-          await context.read<AuthCubit>().register(_name, _login, _password);
+      Map<String, String>? data = await context
+          .read<RegistrationCubit>()
+          .register(_name, _login, _password);
       if (data != null) {
         initUser(data);
       }
@@ -124,7 +125,8 @@ class _RegistrationState extends State<Registration> {
                 const SizedBox(
                   height: 20,
                 ),
-                BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
+                BlocConsumer<RegistrationCubit, RegistrationState>(
+                    listener: (context, state) {
                   if (state is RegistrationSuccess) {
                     Navigator.of(context)
                         .pushNamedAndRemoveUntil(Routes.app, (_) => false);

@@ -39,7 +39,6 @@ class _AuthInitialState extends State<AuthInitial> {
 
   @override
   void initState() {
-    context.read<AuthCubit>().initStorage();
     _timer = Timer(const Duration(milliseconds: 1), auth);
     super.initState();
   }
@@ -47,7 +46,8 @@ class _AuthInitialState extends State<AuthInitial> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
+      body: BlocBuilder<AuthCubit, AuthState>(
+        builder: (context, state) {
           if (state is AuthSuccess) {
             return const App();
           } else if (state is AuthPage) {
@@ -63,8 +63,13 @@ class _AuthInitialState extends State<AuthInitial> {
               ),
             );
           }
-        }),
-      );
+        },
+        buildWhen: (previous, current) =>
+            current is AuthInitial ||
+            current is AuthSuccess ||
+            current is AuthPage,
+      ),
+    );
   }
 
   @override
