@@ -106,7 +106,7 @@ class _RegistrationState extends State<Registration> {
                   controller: passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
-                    labelText: 'Пароль (не менее 6 символов)',
+                    labelText: 'Пароль',
                     labelStyle:
                         const TextStyle(color: Colors.grey, fontSize: 17),
                     floatingLabelStyle:
@@ -138,6 +138,27 @@ class _RegistrationState extends State<Registration> {
                   } else if (state is RegistrationError) {
                     return Text(
                       'Ошибка регистрации',
+                      style: TextStyle(fontSize: 17, color: Colors.red[600]),
+                    );
+                  } else if (state is RegErrorEmailInUse) {
+                    return Text(
+                      'Адрес электронной почты уже используется',
+                      style: TextStyle(fontSize: 17, color: Colors.red[600]),
+                      textAlign: TextAlign.center,
+                    );
+                  } else if (state is RegErrorInvalidEmail) {
+                    return Text(
+                      'Неверный адрес электронной почты',
+                      style: TextStyle(fontSize: 17, color: Colors.red[600]),
+                    );
+                  } else if (state is RegErrorDisabledAccount) {
+                    return Text(
+                      'Учётная запись отключена',
+                      style: TextStyle(fontSize: 17, color: Colors.red[600]),
+                    );
+                  } else if (state is RegErrorShortPassword) {
+                    return Text(
+                      'Пароль должен быть не менее 6 символов',
                       style: TextStyle(fontSize: 17, color: Colors.red[600]),
                     );
                   } else if (state is RegistrationInProgress) {

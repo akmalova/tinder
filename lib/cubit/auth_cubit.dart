@@ -46,7 +46,7 @@ class AuthCubit extends Cubit<AuthState> {
         return null;
       }
     } catch (error) {
-      //print(error);
+      print(error);
       emit(AuthError());
       return null;
     }
@@ -91,8 +91,20 @@ class AuthCubit extends Cubit<AuthState> {
         emit(RegistrationError());
         return null;
       }
+    } on FirebaseAuthException catch (error) {
+      print(error);
+      if (error.code == 'email-already-in-use') {
+        emit(RegErrorEmailInUse()); // ошибка: почта уже используется
+      } else if (error.code == 'invalid-email') {
+        emit(RegErrorInvalidEmail()); // ошибка: неккоректная почта
+      } else if (error.code == 'operation-not-allowed') {
+        emit(RegErrorDisabledAccount()); // ошибка: аккаунт отключен
+      } else {
+        emit(RegErrorShortPassword()); // ошибка: короткий пароль
+      }
+      return null;
     } catch (error) {
-      //print(error);
+      print(error);
       emit(RegistrationError());
       return null;
     }

@@ -19,6 +19,14 @@ class RegistrationInitial extends AuthState {}
 
 class RegistrationError extends AuthState {}
 
+class RegErrorEmailInUse extends AuthState {}
+
+class RegErrorInvalidEmail extends AuthState {}
+
+class RegErrorDisabledAccount extends AuthState {}
+
+class RegErrorShortPassword extends AuthState {}
+
 class RegistrationEmptyFields extends AuthState {}
 
 class RegistrationSuccess extends AuthState {}
